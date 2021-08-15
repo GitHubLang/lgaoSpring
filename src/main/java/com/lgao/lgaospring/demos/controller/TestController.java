@@ -1,6 +1,8 @@
 package com.lgao.lgaospring.demos.controller;
 
+import com.lgao.lgaospring.demos.server.TestService;
 import com.lgao.lgaospring.demos.server.WebSocket;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,9 @@ public class TestController {
 
     @Autowired
     private WebSocket webSocket;
+
+    @Autowired
+    TestService testService;
 
     @RequestMapping("/")
     public String index(Model model){
@@ -39,7 +44,14 @@ public class TestController {
         return "发送成功~";
     }
 
-    @Scheduled(fixedRate=1000)
+    @RequestMapping("/start")
+    @ResponseBody
+    public String start(String sid) throws IOException, InterruptedException {
+        testService.test1(sid);
+        return "{\"code\": 200'}";
+    }
+
+    //@Scheduled(fixedRate=1000)
     private void configureTasks() throws IOException {
         webSocket.sendInfo("完成aaa!!!!");
     }
